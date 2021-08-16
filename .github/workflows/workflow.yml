@@ -40,31 +40,31 @@ jobs:
         server-password: MAVEN_PASSWORD        
 
     - name: Building and Pushing complete-api-gateway
-      run: mvn clean Dmaven.test.skip package dockerfile:push --file complete-api-gateway/pom.xml
+      run: mvn clean -Dmaven.test.skip package dockerfile:push --file complete-api-gateway/pom.xml
       env:
           MAVEN_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and Push complete-ms1
-      run: mvn clean Dmaven.test.skip package dockerfile:push --file complete-ms1/pom.xml
+      run: mvn clean -Dmaven.test.skip package dockerfile:push --file complete-ms1/pom.xml
       env:
           MAVEN_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and Push complete-ms2
-      run: mvn clean Dmaven.test.skip package dockerfile:push --file complete-ms2/pom.xml
+      run: mvn clean -Dmaven.test.skip package dockerfile:push --file complete-ms2/pom.xml
       env:
           MAVEN_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and Push complete-ms3-secret
-      run: mvn clean Dmaven.test.skip package dockerfile:push --file complete-ms3-secret/pom.xml
+      run: mvn clean -Dmaven.test.skip package dockerfile:push --file complete-ms3-secret/pom.xml
       env:
           MAVEN_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and Push complete-service-regirtry
-      run: mvn clean Dmaven.test.skip package dockerfile:push --file complete-service-regirtry/pom.xml
+      run: mvn clean -Dmaven.test.skip package dockerfile:push --file complete-service-regirtry/pom.xml
       env:
           MAVEN_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
