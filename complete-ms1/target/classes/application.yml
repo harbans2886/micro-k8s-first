@@ -1,0 +1,23 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: MICROSER-1
+
+eureka:
+  instance:
+    hostname: eureka-0
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka-0.eureka.default.svc.cluster.local:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream, info, health
+    base-path: /

@@ -1,0 +1,5 @@
+org\mandy\config\UserDto.class
+org\mandy\config\AuthFilter.class
+org\mandy\config\AuthFilter$Config.class
+org\mandy\config\WebClientConfig.class
+org\mandy\CompleteServiceRegirtryApplication.class
