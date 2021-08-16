@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: complete-ms2-app
+  labels:
+    app: complete-ms2-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app : complete-ms2-app
+  template:
+    metadata:
+      labels:
+        app: complete-ms2-app
+    spec:
+      containers:
+      - name: complete-ms2-app
+        image: harbans2886/complete-ms2:0.0.1
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8082
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  complete-ms2-svc
+spec:
+  selector:
+    app:  complete-ms2-app
+  ports:
+  - port:  80
+    targetPort:  8083
