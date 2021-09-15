@@ -10,13 +10,13 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: ingress-ms1-app
+            name: ingress-ms1-svc
             port:
               number: 8080
       - path: /v2/*
         pathType: Prefix
         backend:
           service:
-            name: ingress-ms2-app
+            name: ingress-ms2-svc
             port:
               number: 8080
