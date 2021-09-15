@@ -7,14 +7,14 @@ spec:
   - http:
       paths:
       - path: /v1/*
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: ingress-ms1-svc
             port:
               number: 8080
       - path: /v2/*
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: ingress-ms2-svc
