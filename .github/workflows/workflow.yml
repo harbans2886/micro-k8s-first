@@ -1,0 +1,88 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: SpringBoot CI/CD Pipeline
+
+# 2 events push and workflow_dispatch
+# On push of branch main this workflow will be triggred
+# On workflow_dispatch: - workflow can also be executed manually.
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Environment Variables used in Deploy Job
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: cluster-demo-1    # TODO: update to cluster name
+  GKE_ZONE: us-central1-c   # TODO: update to cluster zone
+
+# BUILD JOB
+# run on ubuntu-latest
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+# steps to be executed in the worflow.
+# actions/checkout@v2 :- github actions created already to be used
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 8
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'adopt'
+        # Docker hub registry
+        server-id: docker.io
+        # MAVEN_USERNAME :secrets.DOCKER_USERNAME
+        # MAVEN_PASSWORD :secrets.DOCKER_PASSWORD
+        server-username: MAVEN_USERNAME
+        server-password: MAVEN_PASSWORD        
+
+    - name: Building and Pushing complete-api-gateway
+      run: mvn clean -Dmaven.test.skip package dockerfile:push --file complete-api-gateway/pom.xml
+      env:
+          MAVEN_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and Push complete-ms1
+      run: mvn clean -Dmaven.test.skip package dockerfile:push --file complete-ms1/pom.xml
+      env:
+          MAVEN_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and Push complete-ms2
+      run: mvn clean -Dmaven.test.skip package dockerfile:push --file complete-ms2/pom.xml
+      env:
+          MAVEN_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and Push complete-ms3-secret
+      run: mvn clean -Dmaven.test.skip package dockerfile:push --file complete-ms3-secret/pom.xml
+      env:
+          MAVEN_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and Push complete-service-regirtry
+      run: mvn clean -Dmaven.test.skip package dockerfile:push --file complete-service-regirtry/pom.xml
+      env:
+          MAVEN_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+# DEPLOY JOB
+  Deploy:
+  # Deploy job will run only after build job is successful That is why it needs: build
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: kubectl - Google Cloud GKE cluster.
+      uses: ameydev/gke-kubectl-action@master
+      env:
+        PROJECT_ID: ${{ env.PROJECT_ID }}
+        APPLICATION_CREDENTIALS: ${{ secrets.GKE_SA_KEY }}
+        CLUSTER_NAME: ${{ env.GKE_CLUSTER }}
+        ZONE_NAME: ${{ env.GKE_ZONE }}
+      with:
+      #apply all the config from this folder
+        args: apply -f complete-k8s-configs/
