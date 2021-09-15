@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: basic-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /v1/*
+        backend:
+          serviceName: ingress-ms1-app
+          servicePort: 8080
+      - path: /v2/*
+        backend:
+          serviceName: ingress-ms2-app
+          servicePort: 8080

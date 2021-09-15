@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-ms1-app
+  labels:
+    app: ingress-ms1-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app : ingress-ms1-app
+  template:
+    metadata:
+      labels:
+        app: ingress-ms1-app
+    spec:
+      containers:
+      - name: ingress-ms1-app
+        image: harbans2886/ingress-ms1:0.0.1
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  ingress-ms1-svc
+spec:
+  selector:
+    app:  ingress-ms1-app
+  ports:
+  - port:  8080
+    targetPort:  8080
+  type: NodePort
